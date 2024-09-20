@@ -161,9 +161,12 @@ def generate_feature_dict(
         feature_dict = data_processor.process_multiseq_fasta(
             fasta_path=tmp_fasta_path, super_alignment_dir=alignment_dir,
         )
-
-    # Remove temporary FASTA file
-    os.remove(tmp_fasta_path)
+        
+    # Remove temporary FASTA file    
+    try:
+        os.remove(tmp_fasta_path)
+    except Exception as e:
+        logger.warning(f"Error removing temporary fasta file: {e}, you may be running parallel inference in a shared filesystem")
 
     return feature_dict
 
