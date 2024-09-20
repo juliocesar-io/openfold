@@ -74,7 +74,9 @@ class EmbeddingGenerator:
         
         # Generate embeddings in bulk
         if self.use_local_esm:
+            torch.hub.set_dir(self.use_local_esm)
             self.model, self.alphabet = torch.hub.load(self.use_local_esm, "esm1b_t33_650M_UR50S", source='local')
+
         else:
             self.model, self.alphabet = torch.hub.load("facebookresearch/esm:main", "esm1b_t33_650M_UR50S")
         if torch.cuda.is_available() and not self.nogpu:
