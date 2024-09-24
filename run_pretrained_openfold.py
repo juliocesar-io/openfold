@@ -356,26 +356,23 @@ def main(args):
                 args.subtract_plddt
             )
 
-            unrelaxed_file_suffix = "_unrelaxed.pdb"
-            if args.cif_output:
-                unrelaxed_file_suffix = "_unrelaxed.cif"
-            unrelaxed_output_path = os.path.join(
-                output_directory, f'{output_name}{unrelaxed_file_suffix}'
-            )
+            unrelaxed_pdb_path = os.path.join(output_directory, f'{output_name}_unrelaxed.pdb')
+            unrelaxed_cif_path = os.path.join(output_directory, f'{output_name}_unrelaxed.cif')
 
-            with open(unrelaxed_output_path, 'w') as fp:
-                if args.cif_output:
-                    fp.write(protein.to_modelcif(unrelaxed_protein))
-                else:
-                    fp.write(protein.to_pdb(unrelaxed_protein))
+            # Write PDB file
+            with open(unrelaxed_pdb_path, 'w') as fp:
+                fp.write(protein.to_pdb(unrelaxed_protein))
 
-            logger.info(f"Output written to {unrelaxed_output_path}...")
+            # Write CIF file
+            with open(unrelaxed_cif_path, 'w') as fp:
+                fp.write(protein.to_modelcif(unrelaxed_protein))
+
+            logger.info(f"Unrelaxed outputs written to {unrelaxed_pdb_path} and {unrelaxed_cif_path}")
 
             if not args.skip_relaxation:
-                # Relax the prediction.
-                logger.info(f"Running relaxation on {unrelaxed_output_path}...")
-                relax_protein(config, args.model_device, unrelaxed_protein, output_directory, output_name,
-                              args.cif_output)
+                # Relax the prediction and output both PDB and CIF
+                logger.info(f"Running relaxation...")
+                relax_protein(config, args.model_device, unrelaxed_protein, output_directory, output_name)
 
             if args.save_outputs:
                 output_dict_path = os.path.join(
