@@ -166,7 +166,11 @@ def main(args):
         temp_fasta_file,
         args.output_dir
     )
-    os.remove(temp_fasta_file)
+    
+    try:
+        os.remove(temp_fasta_file)
+    except Exception as e:
+        logging.error(f"Error deleting temporary file: {e}")
     logging.info("Completed.")
 
 
