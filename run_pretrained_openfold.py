@@ -115,10 +115,12 @@ def precompute_alignments(tags, seqs, alignment_dir, args):
             logger.info(
                 f"Using precomputed alignments for {tag} at {alignment_dir}..."
             )
-
-        # Remove temporary FASTA file
-        os.remove(tmp_fasta_path)
-
+        
+        try:
+            # Remove temporary FASTA file
+            os.remove(tmp_fasta_path)
+        except Exception as e:
+            logger.warning(f"Error removing temporary fasta file: {e}, you may be running parallel inference in a shared filesystem")
 
 def round_up_seqlen(seqlen):
     return int(math.ceil(seqlen / TRACING_INTERVAL)) * TRACING_INTERVAL
